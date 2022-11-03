@@ -1,6 +1,6 @@
 #!/usr/bin/env nix-shell
 #!nix-shell -i runghc -p "with import <nixpkgs> { }; haskellPackages.ghcWithPackages (pkgs: with pkgs; [ HTTP tagsoup ])"
-#!nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs-channels/archive/nixos-18.09.tar.gz
+#!nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-22.05.tar.gz
 
 import           Network.HTTP
 import           Text.HTML.TagSoup
