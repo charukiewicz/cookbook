@@ -4,15 +4,16 @@
 
 -- Do not remove the above lines. Run this file as an executable:
 --
---   chmod a+x ./Main.hs && ./Main.hs
+--   chmod a+x ./concurrency-comparison.hs && ./concurrency-comparison.hs
 --
--- The nix utility must be installed for this to work. 
+-- The nix utility must be installed for this to work.
 
 import           Control.Concurrent.Async
 import           Control.Lens
 import           Data.ByteString.Lazy     ( ByteString )
 import qualified Data.ByteString.Lazy     as BS
 import           Data.Time.Clock
+import           Data.Traversable
 import           GHC.Int
 import           Network.Wreq
 
@@ -25,10 +26,12 @@ getFromUrl url = do
 
 loadRssFeedsSync :: IO [ByteString]
 loadRssFeedsSync = do
-    source1 <- getFromUrl "https://foxhound.systems/blog/rss.xml"
-    source2 <- getFromUrl "https://reddit.com/r/haskell.rss"
-    source3 <- getFromUrl "https://discourse.haskell.org/latest.rss"
-    pure [source1, source2, source3]
+    let dataUrls = [ "https://foxhound.systems/blog/rss.xml"
+                   , "https://reddit.com/r/haskell.rss"
+                   , "https://discourse.haskell.org/latest.rss"
+                   ]
+
+    for dataUrls getFromUrl
 
 
 loadRssFeedsAsync :: IO [ByteString]
@@ -36,7 +39,7 @@ loadRssFeedsAsync = do
     let dataUrls = [ "https://foxhound.systems/blog/rss.xml"
                    , "https://reddit.com/r/haskell.rss"
                    , "https://discourse.haskell.org/latest.rss"
-                   ]   
+                   ]
 
     forConcurrently dataUrls getFromUrl
 
